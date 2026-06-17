@@ -244,9 +244,13 @@ function renderBracelet() {
   const ry = 31;
 
   bracelet.forEach((code, i) => {
-    const angle = (2 * Math.PI * i / Math.max(bracelet.length, 1)) - Math.PI / 2;
-    const x = cx + rx * Math.cos(angle);
-    const y = cy + ry * Math.sin(angle);
+
+  const totalSlots = Number(document.getElementById("braceletSize").value);
+
+  const angle = (2 * Math.PI * i / totalSlots) - Math.PI / 2;
+
+  const x = cx + rx * Math.cos(angle);
+  const y = cy + ry * Math.sin(angle);
 
   box.innerHTML += `<img class="bead" src="${beads[code].img}" style="left:${x}%;top:${y}%;width:18%;">`;
   });
