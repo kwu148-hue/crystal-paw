@@ -239,7 +239,7 @@ function renderBracelet() {
     const x = cx + rx * Math.cos(angle);
     const y = cy + ry * Math.sin(angle);
 
-    box.innerHTML += `<img class="bead" src="${beads[code].img}" style="left:${x}%;top:${y}%;">`;
+  box.innerHTML += `<img class="bead" src="${beads[code].img}" style="left:${x}%;top:${y}%;width:18%;">`;
   });
 
   const limit = Number(document.getElementById("braceletSize").value);
