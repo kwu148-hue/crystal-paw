@@ -139,7 +139,7 @@
 
 <script>
 const beads = {
-  A01: { name: "Clear Quartz", cn: "白水晶", price: 1, unit: 1, img: "IMG_5420.png" },
+  A01: { name: "Clear Quartz", cn: "白水晶", price: 2, unit: 1, img: "IMG_5420.png" },
   A02: { name: "Red Flower Quartz", cn: "红胶花", price: 2, unit: 1, img: "IMG_5419.png" },
   A03: { name: "Moonstone", cn: "月光石", price: 2, unit: 0.75, img: "IMG_5415.png" },
   A04: { name: "Prehnite", cn: "葡萄石", price: 2, unit: 0.75, img: "IMG_5416.png" },
@@ -224,7 +224,15 @@ function clearCollar() {
   collar = [];
   updateAll();
 }
+function collarPrice() {
+  const size = document.getElementById("collarSize").value;
 
+  if (size === "S") return 15;
+  if (size === "M") return 18;
+  if (size === "L") return 21;
+
+  return 15;
+}
 function renderBracelet() {
   const box = document.getElementById("braceletBeads");
   box.innerHTML = "";
