@@ -92,8 +92,11 @@
 
     <p id="unitDisplay">0 / 19 Units</p>
     <p id="braceletPrice">Bracelet Price: $0</p>
+
     <button onclick="clearBracelet()">Clear Bracelet</button>
-  </section>
+    <button onclick="undoBracelet()">撤回上一个珠子</button>
+
+    </section>
 
   <section class="section">
     <h2>2. Choose Crystals</h2>
@@ -220,7 +223,10 @@ function clearBracelet() {
   bracelet = [];
   updateAll();
 }
-
+function undoBracelet() {
+  bracelet.pop();
+  updateAll();
+}
 function clearCollar() {
   collar = [];
   updateAll();
