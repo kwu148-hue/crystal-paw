@@ -94,7 +94,7 @@
     <p id="braceletPrice">Bracelet Price: $0</p>
 
     <button onclick="clearBracelet()">Clear Bracelet</button>
-    <button onclick="undoBracelet()">撤回上一个珠子</button>
+    <button onclick="undoBracelet()">Undo last Bead</button>
 
     </section>
 
@@ -129,8 +129,11 @@
 
     <p id="collarCount">0 / 8 Beads</p>
     <p id="collarPrice">Collar Price: $0</p>
+
     <button onclick="clearCollar()">Clear Collar</button>
-  </section>
+    <button onclick="undoCollar()">Undo Last Bead</button>
+
+    </section>
 
   <section class="section">
     <h2>4. Review Your Design</h2>
@@ -225,6 +228,10 @@ function clearBracelet() {
 }
 function undoBracelet() {
   bracelet.pop();
+  updateAll();
+}
+  function undoCollar() {
+  collar.pop();
   updateAll();
 }
 function clearCollar() {
