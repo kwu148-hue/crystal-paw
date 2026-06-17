@@ -1,51 +1,324 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Crystal Paw</title>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <title>Crystal Paw</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+      background: #fffaf8;
+    }
+
+    button, select {
+      padding: 8px 12px;
+      margin: 6px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      background: white;
+    }
+
+    .section {
+      margin: 50px auto;
+      max-width: 900px;
+      padding: 25px;
+      background: white;
+      border-radius: 18px;
+      border: 1px solid #eee;
+    }
+
+    .preview {
+      position: relative;
+      max-width: 700px;
+      margin: 20px auto;
+    }
+
+    .base-img {
+      width: 100%;
+      display: block;
+    }
+
+    .bead {
+      position: absolute;
+      width: 9%;
+      transform: translate(-50%, -50%);
+    }
+
+    .bead-btn img {
+      width: 55px;
+      height: 55px;
+      object-fit: contain;
+      display: block;
+      margin: auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+    }
+
+    textarea {
+      width: 95%;
+      height: 160px;
+      margin-top: 15px;
+    }
+  </style>
 </head>
 
-<body style="font-family:Arial;text-align:center;padding:50px;">
+<body>
 
-    <h1>Crystal Paw</h1>
+  <h1>Crystal Paw</h1>
+  <h2>Create Matching Crystal Jewelry for You & Your Pet</h2>
+  <p>Design your own bracelet and pet collar with healing crystals.</p>
 
-    <h2>Create Matching Crystal Jewelry for You & Your Pet</h2>
+  <button onclick="location.href='#builder'">Start Designing</button>
 
-    <p>Design your own bracelet and pet collar with healing crystals.</p>
+  <section id="builder" class="section">
+    <h2>1. Design Your Bracelet</h2>
 
-<button onclick="window.location.href='#builder'">
-    Start Designing
-</button>
-<section id="builder" style="padding:50px;text-align:center;">
+    <label>Bracelet Size:</label>
+    <select id="braceletSize" onchange="updateAll()">
+      <option value="19">S - 19 Units</option>
+      <option value="22">M - 22 Units</option>
+      <option value="25">L - 25 Units</option>
+    </select>
 
-  <h2>Design Your Bracelet</h2>
+    <div class="preview">
+      <img src="503.jpeg" class="base-img">
+      <div id="braceletBeads"></div>
+    </div>
 
-  <p>Choose your bracelet size:</p>
+    <p id="unitDisplay">0 / 19 Units</p>
+    <p id="braceletPrice">Bracelet Price: $0</p>
+    <button onclick="clearBracelet()">Clear Bracelet</button>
+  </section>
 
-  <select id="braceletSize">
-    <option value="19">S (19 Units)</option>
-    <option value="22">M (22 Units)</option>
-    <option value="25">L (25 Units)</option>
-  </select>
+  <section class="section">
+    <h2>2. Choose Crystals</h2>
+    <div id="beadButtons" class="grid"></div>
+  </section>
 
-  <br><br>
+  <section class="section">
+    <h2>3. Design Your Pet Collar</h2>
 
-  <p>Current Units:</p>
+    <label>Collar Color:</label>
+    <select id="collarColor" onchange="updateAll()">
+      <option value="white">White</option>
+      <option value="pink">Pink</option>
+      <option value="brown">Brown</option>
+    </select>
 
-  <div id="unitDisplay">
-    0 / 19 Units
-  </div>
+    <label>Collar Size:</label>
+    <select id="collarSize" onchange="updateAll()">
+      <option>S</option>
+      <option>M</option>
+      <option>L</option>
+    </select>
 
-  <br>
+    <p>Pet collar has 8 beads.</p>
 
-  <button>A01 Aquamarine</button>
-  <button>A02 Red Flower Agate</button>
-  <button>A03 Moonstone</button>
-  <button>A04 Prehnite</button>
-  <button>A05 Amethyst</button>
-  <button>A06 Rose Quartz</button>
-  <button>A07 Clear Quartz</button>
+    <div class="preview">
+      <img id="collarImg" src="504.jpeg" class="base-img">
+      <div id="collarBeads"></div>
+    </div>
 
-</section>
+    <p id="collarCount">0 / 8 Beads</p>
+    <p id="collarPrice">Collar Price: $0</p>
+    <button onclick="clearCollar()">Clear Collar</button>
+  </section>
+
+  <section class="section">
+    <h2>4. Review Your Design</h2>
+    <p id="totalPrice">Total: $0</p>
+    <textarea id="orderText"></textarea>
+    <br>
+    <button onclick="copyOrder()">Copy My Design</button>
+  </section>
+
+<script>
+const beads = {
+  A01: { name: "Clear Quartz", cn: "白水晶", price: 1, unit: 1, img: "IMG_5420.png" },
+  A02: { name: "Red Flower Quartz", cn: "红胶花", price: 2, unit: 1, img: "IMG_5419.png" },
+  A03: { name: "Moonstone", cn: "月光石", price: 2, unit: 0.75, img: "IMG_5415.png" },
+  A04: { name: "Prehnite", cn: "葡萄石", price: 2, unit: 0.75, img: "IMG_5416.png" },
+  A05: { name: "Amethyst", cn: "紫水晶", price: 2, unit: 1, img: "IMG_5417.png" },
+  A06: { name: "Rose Quartz", cn: "粉水晶", price: 2, unit: 1, img: "IMG_5418.png" },
+  A07: { name: "Rose Quartz Diamond", cn: "菱形粉水晶", price: 2, unit: 0.75, img: "IMG_5421.png" },
+  A08: { name: "Raw Clear Quartz", cn: "石头型白水晶", price: 2, unit: 0.75, img: "IMG_5422.png" },
+  A09: { name: "Square Rose Quartz", cn: "方形粉水晶", price: 2, unit: 1, img: "IMG_5423.png" },
+  A10: { name: "Tiny Clear Quartz", cn: "米珠白水晶", price: 0.5, unit: 0.5, img: "IMG_5424.png" }
+};
+
+const collarImages = {
+  white: "504.jpeg",
+  pink: "IMG_5321.jpeg",
+  brown: "IMG_5320.jpeg"
+};
+
+let bracelet = [];
+let collar = [];
+
+function makeButtons() {
+  const box = document.getElementById("beadButtons");
+  box.innerHTML = "";
+
+  Object.keys(beads).forEach(code => {
+    const b = beads[code];
+
+    box.innerHTML += `
+      <button class="bead-btn" onclick="addBracelet('${code}')">
+        <img src="${b.img}">
+        Add to Bracelet<br>
+        ${code} ${b.name}<br>
+        $${b.price}
+      </button>
+
+      <button class="bead-btn" onclick="addCollar('${code}')">
+        <img src="${b.img}">
+        Add to Collar<br>
+        ${code} ${b.name}
+      </button>
+    `;
+  });
+}
+
+function braceletUnits() {
+  return bracelet.reduce((sum, code) => sum + beads[code].unit, 0);
+}
+
+function braceletPrice() {
+  return bracelet.reduce((sum, code) => sum + beads[code].price, 0);
+}
+
+function collarPrice() {
+  return collar.reduce((sum, code) => sum + beads[code].price, 0);
+}
+
+function addBracelet(code) {
+  const limit = Number(document.getElementById("braceletSize").value);
+  if (braceletUnits() + beads[code].unit > limit) {
+    alert("This bracelet is full.");
+    return;
+  }
+  bracelet.push(code);
+  updateAll();
+}
+
+function addCollar(code) {
+  if (collar.length >= 8) {
+    alert("Pet collar can only have 8 beads.");
+    return;
+  }
+  collar.push(code);
+  updateAll();
+}
+
+function clearBracelet() {
+  bracelet = [];
+  updateAll();
+}
+
+function clearCollar() {
+  collar = [];
+  updateAll();
+}
+
+function renderBracelet() {
+  const box = document.getElementById("braceletBeads");
+  box.innerHTML = "";
+
+  const cx = 50;
+  const cy = 51;
+  const rx = 31;
+  const ry = 31;
+
+  bracelet.forEach((code, i) => {
+    const angle = (2 * Math.PI * i / Math.max(bracelet.length, 1)) - Math.PI / 2;
+    const x = cx + rx * Math.cos(angle);
+    const y = cy + ry * Math.sin(angle);
+
+    box.innerHTML += `<img class="bead" src="${beads[code].img}" style="left:${x}%;top:${y}%;">`;
+  });
+
+  const limit = Number(document.getElementById("braceletSize").value);
+  document.getElementById("unitDisplay").innerText = braceletUnits() + " / " + limit + " Units";
+  document.getElementById("braceletPrice").innerText = "Bracelet Price: $" + braceletPrice().toFixed(2);
+}
+
+function renderCollar() {
+  const color = document.getElementById("collarColor").value;
+  document.getElementById("collarImg").src = collarImages[color];
+
+  const box = document.getElementById("collarBeads");
+  box.innerHTML = "";
+
+  const positions = [
+    {x:36, y:58},
+    {x:40, y:64},
+    {x:45, y:69},
+    {x:50, y:72},
+    {x:55, y:72},
+    {x:60, y:69},
+    {x:65, y:64},
+    {x:69, y:58}
+  ];
+
+  collar.forEach((code, i) => {
+    const p = positions[i];
+    box.innerHTML += `<img class="bead" src="${beads[code].img}" style="left:${p.x}%;top:${p.y}%;width:12%;">`;
+  });
+
+  document.getElementById("collarCount").innerText = collar.length + " / 8 Beads";
+  document.getElementById("collarPrice").innerText = "Collar Price: $" + collarPrice().toFixed(2);
+}
+
+function updateOrderText() {
+  const braceletSize = document.getElementById("braceletSize").selectedOptions[0].text;
+  const collarColor = document.getElementById("collarColor").value;
+  const collarSize = document.getElementById("collarSize").value;
+
+  const text =
+`Hi! I want to customize this Crystal Paw design.
+
+Bracelet:
+Size: ${braceletSize}
+Beads: ${bracelet.map(code => code + " " + beads[code].name).join(", ")}
+Units: ${braceletUnits()}
+Price: $${braceletPrice().toFixed(2)}
+
+Pet Collar:
+Color: ${collarColor}
+Size: ${collarSize}
+Beads: ${collar.map(code => code + " " + beads[code].name).join(", ")}
+Price: $${collarPrice().toFixed(2)}
+
+Total: $${(braceletPrice() + collarPrice()).toFixed(2)}
+
+Please help me confirm the final design.`;
+
+  document.getElementById("orderText").value = text;
+  document.getElementById("totalPrice").innerText =
+    "Total: $" + (braceletPrice() + collarPrice()).toFixed(2);
+}
+
+function copyOrder() {
+  const text = document.getElementById("orderText");
+  text.select();
+  document.execCommand("copy");
+  alert("Design copied!");
+}
+
+function updateAll() {
+  renderBracelet();
+  renderCollar();
+  updateOrderText();
+}
+
+makeButtons();
+updateAll();
+</script>
+
 </body>
 </html>
